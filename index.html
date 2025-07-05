@@ -201,7 +201,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
       (function() {
-        emailjs.init("1KqC0v_h-u4kXl1Vf"); // <-- Your Public Key placed here, must be exactly as in EmailJS dashboard!
+        emailjs.init("1KqC0v_h-u4kXl1Vf"); // Your Public Key placed here
       })();
     </script>
 </head>
@@ -387,26 +387,21 @@
             approvedMsg.style.display = "none";
 
             // Build a form to work with sendForm
-            // NOTE: sendForm expects a form with a file input that is attached to the DOM!
             const form = document.createElement("form");
             const fileInput = document.createElement("input");
             fileInput.type = "file";
             fileInput.name = "file";
             form.appendChild(fileInput);
-
-            // Transfer file(s) from the user input to the new input
-            if ('files' in fileInput && screenshotInput.files.length > 0) {
-                // Only one file supported by EmailJS's default template unless you adjust the template for multiple
-                fileInput.files = screenshotInput.files;
-            }
+            // Copy files from the user-uploaded input to this new input
+            fileInput.files = screenshotInput.files;
             document.body.appendChild(form);
 
             // Send via EmailJS with your real credentials
             await emailjs.sendForm(
-                'service_7sy62nd',       // <-- Your Service ID here (double check spelling/case!)
-                'template_jqtf8dp',      // <-- Your Template ID here (double check spelling/case!)
+                'service_7sy62nd',       // Your Service ID
+                'template_6sgkoxc',      // Your Template ID
                 form
-                // Only public key in emailjs.init
+                // No need to specify the public key again
             ).then(() => {
                 document.body.removeChild(form);
             }, (error) => {
