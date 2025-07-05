@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* ...styles unchanged... */
         body {
             font-family: 'Space Mono', monospace;
             background-color: #0d1117;
@@ -201,7 +202,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
       (function() {
-        emailjs.init("1KqC0v_h-u4kXl1Vf"); // Your Public Key placed here
+        emailjs.init("90-1B4fEjy1c6b3Sa"); // Your NEW Public Key placed here
       })();
     </script>
 </head>
@@ -241,6 +242,7 @@
         <div>Self-destructing in <span id="selfDestructCountdown">10</span> seconds...</div>
     </div>
     <script>
+        // ... JavaScript unchanged, except for EmailJS credentials ...
         // --- Global Variables ---
         const terminalOutput = document.getElementById('terminalOutput');
         const startScanBtn = document.getElementById('startScanBtn');
@@ -392,16 +394,14 @@
             fileInput.type = "file";
             fileInput.name = "file";
             form.appendChild(fileInput);
-            // Copy files from the user-uploaded input to this new input
             fileInput.files = screenshotInput.files;
             document.body.appendChild(form);
 
             // Send via EmailJS with your real credentials
             await emailjs.sendForm(
-                'service_7sy62nd',       // Your Service ID
-                'template_6sgkoxc',      // Your Template ID
+                'service_7sy62nd',       // Service ID
+                'template_6sgkoxc',      // Template ID
                 form
-                // No need to specify the public key again
             ).then(() => {
                 document.body.removeChild(form);
             }, (error) => {
