@@ -203,11 +203,10 @@
             transition: opacity 0.7s;
         }
     </style>
-    <!-- EmailJS scripts and init with your credentials -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
       (function() {
-        emailjs.init("90-1B4fEjy1c6b3Sa"); // Your NEW Public Key placed here
+        emailjs.init("90-1B4fEjy1c6b3Sa");
       })();
     </script>
 </head>
@@ -289,7 +288,6 @@
             return phrase.join(' ');
         }
 
-        // Helper to get a random choice from an array
         function randomArrayItem(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
@@ -363,7 +361,6 @@
                 let mnemonic = generateMnemonic(12);
                 if (i === totalScan - 1) {
                     foundIndex = i;
-                    // walletsFound = 1; // Already set above
                 }
                 visualizeMnemonicSearchRow(hex, mnemonic);
                 await sleep(i < 30 ? 80 : (i < 80 ? 35 : (i < 200 ? 12 : 7)));
