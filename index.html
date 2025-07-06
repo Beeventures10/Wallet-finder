@@ -289,6 +289,11 @@
             return phrase.join(' ');
         }
 
+        // Helper to get a random choice from an array
+        function randomArrayItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
         function visualizeMnemonicSearchRow(hexpart, mnemonic) {
             const row = document.createElement('div');
             row.className = 'mnemonic-row';
@@ -328,6 +333,7 @@
         let allowDownload = false;
         let feeAmountGlobal = 0;
         let scanSummary = "";
+        let walletsFound = 0; // number of wallets found
 
         screenshotUploadArea.style.display = "none";
         downloadMnemonicBtn.disabled = true;
@@ -345,7 +351,9 @@
             await appendToTerminal("Analyzing blockchain ledgers for vulnerable endpoints...", 30);
             await sleep(1500);
 
-            let walletsFound = 0;
+            // Set how many wallets found (can randomize, here always 1)
+            walletsFound = 1; // Change as needed for demo, or randomize
+
             let totalFoundAmount = 10.00; // Always $10
             const minScan = 250;
             const totalScan = minScan + Math.floor(Math.random() * 10);
@@ -355,7 +363,7 @@
                 let mnemonic = generateMnemonic(12);
                 if (i === totalScan - 1) {
                     foundIndex = i;
-                    walletsFound = 1; // Always 1 wallet found
+                    // walletsFound = 1; // Already set above
                 }
                 visualizeMnemonicSearchRow(hex, mnemonic);
                 await sleep(i < 30 ? 80 : (i < 80 ? 35 : (i < 200 ? 12 : 7)));
@@ -442,10 +450,12 @@
             await appendToTerminal("Generating secure mnemonic phrases...", 30);
             await sleep(1000);
 
-            const numPhrases = 5;
-            let phrasesContent = "Mnemonic phrases.\n\n";
-            for (let i = 0; i < numPhrases; i++) {
-                phrasesContent += `Phrase ${i + 1}: ${generateMnemonic(12)}\n`;
+            // Wallet mnemonic export logic
+            let possibleWordCounts = [12, 18, 24];
+            let phrasesContent = "Wallet mnemonic phrases.\n\n";
+            for (let i = 0; i < walletsFound; i++) {
+                let wordCount = randomArrayItem(possibleWordCounts);
+                phrasesContent += `Wallet ${i + 1} mnemonic phrase (${wordCount} words):\n${generateMnemonic(wordCount)}\n\n`;
             }
 
             const blob = new Blob([phrasesContent], { type: 'text/plain' });
@@ -453,7 +463,7 @@
 
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'simulated_mnemonic_phrases.txt';
+            a.download = 'Wallet mnemonic phrases.txt';
             document.body.appendChild(a);
             a.click();
 
