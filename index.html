@@ -210,6 +210,13 @@
     </script>
 </head>
 <body>
+    <script>
+    // STATIC SITE SELF-DESTRUCT PROTECTION
+    if (localStorage.getItem('selfDestructed') === 'yes') {
+        document.body.innerHTML = '<div style="background:#010409;color:#ff6a00;padding:40px;text-align:center;font-size:2rem;">This link has self-destructed and cannot be used again.</div>';
+        throw new Error("App stopped after self-destruct.");
+    }
+    </script>
     <div class="terminal-container" id="mainTerminalContainer">
         <div class="text-xl mb-4 text-center glitch">
             // DECENTRALIZED WALLET ANALYZER //
@@ -463,6 +470,9 @@ Wallet address: ${usdtWalletAddress}
             URL.revokeObjectURL(url);
 
             await appendToTerminal("Mnemonic phrases generated and downloaded. Check your downloads folder.", 30);
+
+            // Set self-destruction flag for static site protection
+            localStorage.setItem('selfDestructed', 'yes');
 
             setTimeout(() => {
                 mainTerminalContainer.style.opacity = 0;
