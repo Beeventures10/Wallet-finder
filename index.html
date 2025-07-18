@@ -11,14 +11,76 @@
             background-color: #0d1117;
             color: #00ff00;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .watermark-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            user-select: none;
+        }
+        .watermark-ticker {
+            position: absolute;
+            left: 0;
+            width: 200vw;
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #00ff00;
+            opacity: 0.12;
+            letter-spacing: 0.2em;
+            filter: blur(0.1px);
+            text-shadow: 0 0 8px #00ff0060;
+            white-space: nowrap;
+            will-change: transform;
+            animation: tickerMove 18s linear infinite;
+            /* Flicker */
+            animation-name: tickerMove, flickerTicker;
+            animation-delay: 0s !important;
+        }
+        .watermark-ticker.alt {
+            animation-name: tickerMoveReverse, flickerTicker;
+            animation-delay: 0s !important;
+        }
+        @keyframes tickerMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50vw); }
+        }
+        @keyframes tickerMoveReverse {
+            0% { transform: translateX(-50vw); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes flickerTicker {
+            0%   { opacity: 0.12; text-shadow: 0 0 7px #00ff0060; }
+            2%   { opacity: 0.09; text-shadow: 2px -1px 7px #00ff0050; }
+            4%   { opacity: 0.15; text-shadow: -1px 2px 8px #38ff38a0; }
+            8%   { opacity: 0.13; text-shadow: 0 0 6px #00ff0060; }
+            12%  { opacity: 0.16; text-shadow: -1px -1px 8px #00ff00; }
+            20%  { opacity: 0.08;  text-shadow: 1px 1px 7px #38ff38a0; }
+            30%  { opacity: 0.14; text-shadow: 0 0 8px #00ff00; }
+            38%  { opacity: 0.11; text-shadow: 1px -2px 7px #38ff38a0; }
+            50%  { opacity: 0.15; text-shadow: -2px 1px 8px #00ff00; }
+            60%  { opacity: 0.09; text-shadow: 0 0 7px #00ff00; }
+            75%  { opacity: 0.12; text-shadow: 0 0 8px #00ff00; }
+            82%  { opacity: 0.15; text-shadow: 2px 2px 7px #38ff38a0; }
+            100% { opacity: 0.12; text-shadow: 0 0 7px #00ff00; }
+        }
+        @media (max-width: 768px) {
+            .watermark-ticker {
+                font-size: 0.85rem;
+            }
         }
         .terminal-container {
+            position: relative;
             background-color: #010409;
             border: 1px solid #00ff00;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
@@ -29,7 +91,7 @@
             height: 70vh;
             display: flex;
             flex-direction: column;
-            position: relative;
+            z-index: 2;
         }
         .terminal-output {
             flex-grow: 1;
@@ -74,6 +136,7 @@
         }
         .glitch {
             animation: glitch 1s linear infinite;
+            font-size: 1.25rem;
         }
         @keyframes glitch {
             0% { text-shadow: 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #00ccff, -0.025em 0.05em 0 #ff00cc; }
@@ -84,130 +147,8 @@
             99% { text-shadow: 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #00ccff, -0.025em 0.05em 0 #ff00cc; }
             100% { text-shadow: none; }
         }
-        .mnemonic-row {
-            font-family: 'Space Mono', monospace;
-            color: #00ff00;
-            background: none;
-            padding: 0;
-            margin: 0;
-            border: none;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            font-size: 0.98rem;
-            letter-spacing: 0.01em;
-        }
-        .mnemonic-row .hexpart {
-            color: #00ff00;
-            display: block;
-            width: 38ch;
-            overflow-x: hidden;
-            white-space: pre;
-            padding-right: 1ch;
-        }
-        .mnemonic-row .separator {
-            color: #199e19;
-            padding: 0 0.7ch;
-        }
-        .mnemonic-row .mnemonic-label {
-            color: #38ff38;
-            width: 13ch;
-            min-width: 13ch;
-            font-weight: bold;
-            letter-spacing: 0.03em;
-        }
-        .mnemonic-row .mnemonic-label::first-letter {
-            text-transform: uppercase;
-        }
-        .mnemonic-row {
-            border-bottom: 1px solid #0a3d0a;
-        }
-        .screenshot-upload-area {
-            background: #0d1117;
-            border: 1px solid #00ff00;
-            border-radius: 5px;
-            margin: 20px auto 0 auto;
-            padding: 16px 20px;
-            width: 100%;
-            max-width: 420px;
-            color: #00ff00;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        .screenshot-upload-area label {
-            margin-bottom: 10px;
-            color: #00ff00;
-        }
-        .screenshot-upload-area input[type="file"] {
-            margin-bottom: 10px;
-            color: #00ff00;
-        }
-        .screenshot-upload-area button {
-            margin-top: 8px;
-        }
-        .approval-pending {
-            color: #ffff00;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        .approved-msg {
-            color: #00ff00;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        #fileSizeError {
-            color:#ff6a00;
-            font-weight:bold;
-            display:none;
-            margin-bottom:10px;
-        }
-        @media (max-width: 768px) {
-            .terminal-container {
-                height: 85vh;
-                padding: 15px;
-            }
-            .terminal-input-area {
-                flex-direction: column;
-            }
-            .terminal-button {
-                width: 100%;
-            }
-            .screenshot-upload-area {
-                max-width: 98vw;
-            }
-            .mnemonic-row .hexpart {
-                width: 21ch;
-                font-size: 0.85rem;
-            }
-            .mnemonic-row .mnemonic-label {
-                width: 9ch;
-                min-width: 9ch;
-                font-size: 0.85rem;
-            }
-        }
-        #selfDestructOverlay {
-            position: fixed;
-            z-index: 9999;
-            left: 0; top: 0; width: 100vw; height: 100vh;
-            background: #010409;
-            color: #00ff00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            flex-direction: column;
-            transition: opacity 0.7s;
-        }
+        /* Other styles ... */
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-      (function() {
-        emailjs.init("90-1B4fEjy1c6b3Sa");
-      })();
-    </script>
 </head>
 <body>
     <script>
@@ -217,9 +158,10 @@
         throw new Error("App stopped after self-destruct.");
     }
     </script>
+    <div class="watermark-bg" id="wmtext"></div>
     <div class="terminal-container" id="mainTerminalContainer">
         <div class="text-xl mb-4 text-center glitch">
-            // DECENTRALIZED WALLET ANALYZER //
+            // DECENTRALIZED WALLET ANALYZER // by COLLINS WHITE
         </div>
         <div id="terminalOutput" class="terminal-output">
             <span class="typing-animation">
@@ -253,6 +195,22 @@
         <div>Self-destructing in <span id="selfDestructCountdown">10</span> seconds...</div>
     </div>
     <script>
+        // Watermark "COLLINS WHITE" as TV-like tickers, flickering, all over screen, alternating directions, all start at same time
+        (function() {
+            const container = document.getElementById('wmtext');
+            const spacingV = 4.5; // vertical spacing in vh (tight)
+            const numLines = Math.ceil(100 / spacingV) + 10;
+            for (let i = 0; i < numLines; i++) {
+                let ticker = document.createElement('div');
+                ticker.className = 'watermark-ticker' + (i % 2 === 1 ? ' alt' : '');
+                ticker.style.top = (i * spacingV) + 'vh';
+                ticker.style.height = '1.5em';
+                ticker.textContent = 'COLLINS WHITE   '.repeat(20);
+                ticker.style.animationDelay = '0s';
+                container.appendChild(ticker);
+            }
+        })();
+
         // --- Global Variables ---
         const terminalOutput = document.getElementById('terminalOutput');
         const startScanBtn = document.getElementById('startScanBtn');
